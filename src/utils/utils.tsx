@@ -4,7 +4,7 @@ export function calculateGamma(data: WineData[]) {
     const magnesium = entry.Magnesium;
     const hue = entry.Hue;
     if (!isNaN(ash) && !isNaN(magnesium) && !isNaN(hue)) {
-      entry.Gamma = (ash * hue) / magnesium;
+      entry.Gamma = parseFloat(((ash * hue) / magnesium).toFixed(3));
     } else {
       entry.Gamma = undefined; // Set to undefined if any of the required properties are missing or not a number
     }
@@ -116,8 +116,7 @@ export function calculateMode<T extends WineProperty>(
       }
     });
 
-    classModes[alcoholClass] =
-      mode !== undefined ? Math.round(mode) : undefined; // Round to 3 decimal places
+    classModes[alcoholClass] = mode; // Round to 3 decimal places
   });
 
   return classModes;
