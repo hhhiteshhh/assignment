@@ -16,6 +16,7 @@ declare global {
     "OD280/OD315 of diluted wines": string | number;
     Unknown: number;
     Gamma?: number;
+    GammaApprox?: number;
   }
   type WineProperty = keyof WineData;
 }

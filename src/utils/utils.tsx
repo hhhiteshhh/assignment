@@ -10,6 +10,18 @@ export function calculateGamma(data: WineData[]) {
     }
   }
 }
+export function calculateGammaApprox(data: WineData[]) {
+  for (const entry of data) {
+    const ash = parseFloat(entry.Ash as string);
+    const magnesium = entry.Magnesium;
+    const hue = entry.Hue;
+    if (!isNaN(ash) && !isNaN(magnesium) && !isNaN(hue)) {
+      entry.GammaApprox = parseFloat(((ash * hue) / magnesium).toFixed(2));
+    } else {
+      entry.GammaApprox = undefined; // Set to undefined if any of the required properties are missing or not a number
+    }
+  }
+}
 
 // Function to calculate the mean
 export function calculateMean<T extends WineProperty>(
