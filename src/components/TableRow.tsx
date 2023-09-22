@@ -1,6 +1,6 @@
 type Props = {
   title: string;
-  data: Record<number, number | undefined>;
+  data: Record<number, number | string>;
 };
 
 function TableRow({ title, data }: Props) {

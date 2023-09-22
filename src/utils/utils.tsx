@@ -4,7 +4,7 @@ export function calculateGamma(data: WineData[]) {
     const magnesium = entry.Magnesium;
     const hue = entry.Hue;
     if (!isNaN(ash) && !isNaN(magnesium) && !isNaN(hue)) {
-      entry.Gamma = parseFloat(((ash * hue) / magnesium).toFixed(3));
+      entry.Gamma = (ash * hue) / magnesium;
     } else {
       entry.Gamma = undefined; // Set to undefined if any of the required properties are missing or not a number
     }
@@ -79,7 +79,7 @@ export function calculateMedian<T extends WineProperty>(
 export function calculateMode<T extends WineProperty>(
   data: WineData[],
   property: T
-): Record<number, number | undefined> {
+): Record<number, number | string> {
   const classModeMap = new Map<number, Map<number, number>>();
 
   // Count occurrences of values of the specified property for each class
@@ -104,19 +104,26 @@ export function calculateMode<T extends WineProperty>(
   });
 
   // Find the mode for each class
-  const classModes: Record<number, number | undefined> = {};
+  const classModes: Record<number, number | string> = {};
   classModeMap.forEach((classMap, alcoholClass) => {
-    let maxCount = 0;
+    let maxCount = 1;
     let mode: number | undefined = undefined;
-
+    let isEqual = true;
     classMap.forEach((count, value) => {
       if (count > maxCount) {
         maxCount = count;
         mode = value;
+        isEqual = false; // Reset the flag if we find a new mode
+      } else if (count < maxCount) {
+        isEqual = false; // Reset the flag if we find a value with a lower count
       }
     });
 
-    classModes[alcoholClass] = mode; // Round to 3 decimal places
+    if (isEqual) {
+      classModes[alcoholClass] = "NE"; // All values have the same occurrence
+    } else {
+      classModes[alcoholClass] = mode!; // Round to 3 decimal places
+    }
   });
 
   return classModes;
